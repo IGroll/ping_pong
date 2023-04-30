@@ -36,11 +36,22 @@ class Ball(Sprites):
     def __init__(self,speed,sprite,player_x,player_y):
         super().__init__(speed,sprite,player_x,player_y)
         self.image = transform.scale(image.load(sprite),(100,100))
+        self.xspeed = speed
+        self.yspeed = speed
     def update(self):
         window.blit(self.image,(self.rect.x,self.rect.y))
-        self.rect.x -= self.speed
-player1 = Player(5,'player1.png',650,100)
-player2 = Player(5,'player2.png',100,100)
+        self.rect.x += self.xspeed
+        self.rect.y += self.yspeed
+        if sprite.collide_rect(self,player1):
+            self.xspeed = -self.xspeed
+        if self.rect.y <= 0:
+            self.yspeed = self.speed
+        if self.rect.y >= 500:
+            self.yspeed = -self.speed
+        if sprite.collide_rect(self,player2):
+            self.xspeed = -self.xspeed
+player1 = Player(5,'player1.png',650,200)
+player2 = Player(5,'player2.png',100,200)
 ball = Ball(3,'ball.png',400,100)
 while game:
     window.blit(bg,(0,0))
