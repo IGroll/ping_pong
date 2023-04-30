@@ -4,6 +4,10 @@ window = display.set_mode((800,600))
 bg = transform.scale(image.load('bg.png'),(800,600))
 display.set_caption(':o')
 game = True
+end = True
+font = font.SysFont('Arial',70)
+blue = font.render('Blue win',True,(255,50,50))
+red = font.render('Red win',True,(255,50,50))
 fps = 60
 clock = time.Clock()
 class Sprites(sprite.Sprite):
@@ -44,24 +48,30 @@ class Ball(Sprites):
         self.rect.y += self.yspeed
         if sprite.collide_rect(self,player1):
             self.xspeed = -self.xspeed
-        if self.rect.y <= 0:
+        if self.rect.y <= 20:
             self.yspeed = self.speed
-        if self.rect.y >= 500:
+        if self.rect.y >= 480:
             self.yspeed = -self.speed
         if sprite.collide_rect(self,player2):
             self.xspeed = -self.xspeed
-player1 = Player(5,'player1.png',650,200)
-player2 = Player(5,'player2.png',100,200)
+        
+player1 = Player(5,'player1.png',650,220)
+player2 = Player(5,'player2.png',100,220)
 ball = Ball(3,'ball.png',400,100)
 while game:
     window.blit(bg,(0,0))
     for i in event.get():
         if i.type == QUIT:
             game = False
-    player1.update()
-    player1.move1()
-    player2.update()
-    player2.move2()
-    ball.update()
-    clock.tick(fps)
-    display.update()
+    if end:
+        player1.update()
+        player1.move1()
+        player2.update()
+        player2.move2()
+        ball.update()
+        if ball.rect.x <= 0:
+            window.blit(blue,(300,250))    
+        if ball.rect.x >= 800:
+            window.blit(red,(300,250))    
+        clock.tick(fps)
+        display.update()
