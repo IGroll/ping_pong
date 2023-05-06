@@ -5,9 +5,11 @@ bg = transform.scale(image.load('bg.png'),(800,600))
 display.set_caption(':o')
 game = True
 end = True
+blue_goals = 0
+red_goals = 0
 font = font.SysFont('Arial',70)
-blue = font.render('Blue win',True,(255,50,50))
-red = font.render('Red win',True,(255,50,50))
+blue = font.render(str(blue_goals),True,(0,50,255))
+red = font.render(str(red_goals),True,(255,50,50))
 fps = 60
 clock = time.Clock()
 class Sprites(sprite.Sprite):
@@ -47,6 +49,7 @@ class Ball(Sprites):
         self.rect.x += self.xspeed
         self.rect.y += self.yspeed
         if sprite.collide_rect(self,player1):
+
             self.xspeed = -self.xspeed
         if self.rect.y <= 20:
             self.yspeed = self.speed
@@ -66,6 +69,21 @@ while game:
     if end:
         player1.update()
         player1.move1()
+        player2.update()
+        player2.move2()
+        ball.update()
+        if ball.rect.x <= 0:
+            blue_goals += 1
+            blue = font.render(str(blue_goals),True,(0,50,255))
+            ball.rect.x = 400
+        window.blit(blue,(650,50))    
+        if ball.rect.x >= 800:
+            red_goals += 1
+            red = font.render(str(red_goals),True,(255,50,50))
+            ball.rect.x = 300
+        window.blit(red,(150,50))    
+        clock.tick(fps)
+        display.update()
         player2.update()
         player2.move2()
         ball.update()
