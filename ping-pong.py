@@ -5,12 +5,16 @@ bg = transform.scale(image.load('bg.png'),(800,600))
 display.set_caption(':o')
 game = True
 end = True
+wait = False
 blue_goals = 0
 red_goals = 0
 font = font.SysFont('Arial',70)
 blue = font.render(str(blue_goals),True,(0,50,255))
 red = font.render(str(red_goals),True,(255,50,50))
 fps = 60
+wait_schetchik = 3
+aaa = 0
+waiter = font.render(str(wait_schetchik),True,(0,0,0))
 clock = time.Clock()
 class Sprites(sprite.Sprite):
     def __init__(self,speed,sprite,player_x,player_y):
@@ -49,15 +53,13 @@ class Ball(Sprites):
         self.rect.x += self.xspeed
         self.rect.y += self.yspeed
         if sprite.collide_rect(self,player1):
-
-            self.xspeed = -self.xspeed
+            self.xspeed *= -1
         if self.rect.y <= 20:
-            self.yspeed = self.speed
+            self.yspeed *= -1
         if self.rect.y >= 480:
-            self.yspeed = -self.speed
+            self.yspeed *= -1
         if sprite.collide_rect(self,player2):
-            self.xspeed = -self.xspeed
-        
+            self.xspeed *= -1
 player1 = Player(5,'player1.png',650,220)
 player2 = Player(5,'player2.png',100,220)
 ball = Ball(3,'ball.png',400,100)
@@ -66,30 +68,49 @@ while game:
     for i in event.get():
         if i.type == QUIT:
             game = False
+    if wait:
+        aaa += 1
+        if aaa >= fps:
+            aaa = 0
+            wait_schetchik -= 1
+            waiter = font.render(str(wait_schetchik),True,(0,0,0))
+            if wait_schetchik == 0:
+                wait_schetchik = 3
+                wait = False
+                end = True
+        window.blit(waiter,(380,300))  
+        window.blit(blue,(650,50))    
+        window.blit(red,(150,50)) 
     if end:
         player1.update()
         player1.move1()
         player2.update()
         player2.move2()
         ball.update()
-        if ball.rect.x <= 0:
+        if ball.rect.x <= -110:
             blue_goals += 1
             blue = font.render(str(blue_goals),True,(0,50,255))
             ball.rect.x = 400
+            ball.rect.y = 300
+            end = False
+            wait = True
         window.blit(blue,(650,50))    
-        if ball.rect.x >= 800:
+        if ball.rect.x >= 910:
             red_goals += 1
             red = font.render(str(red_goals),True,(255,50,50))
-            ball.rect.x = 300
+            ball.rect.x = 400
+            ball.rect.y = 300
+            end = False
+            wait = True
         window.blit(red,(150,50))    
         clock.tick(fps)
         display.update()
         player2.update()
         player2.move2()
         ball.update()
-        if ball.rect.x <= 0:
+        if ball.rect.x <= -120:
             window.blit(blue,(300,250))    
-        if ball.rect.x >= 800:
+        if ball.rect.x >= 910:
             window.blit(red,(300,250))    
-        clock.tick(fps)
-        display.update()
+    clock.tick(fps)
+    display.update()
