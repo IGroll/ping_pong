@@ -2,6 +2,7 @@ from pygame import *
 font.init()
 window = display.set_mode((800,600))
 bg = transform.scale(image.load('bg.png'),(800,600))
+circle = transform.scale(image.load('circle.png'),(150,150))
 display.set_caption(':o')
 game = True
 end = True
@@ -78,6 +79,7 @@ while game:
                 wait_schetchik = 3
                 wait = False
                 end = True
+        window.blit(circle,(320,260))
         window.blit(waiter,(380,300))  
         window.blit(blue,(650,50))    
         window.blit(red,(150,50)) 
