@@ -2,7 +2,6 @@ from pygame import *
 font.init()
 window = display.set_mode((800,600))
 bg = transform.scale(image.load('bg.png'),(800,600))
-circle = transform.scale(image.load('circle.png'),(150,150))
 display.set_caption(':o')
 game = True
 end = True
@@ -15,7 +14,8 @@ red = font.render(str(red_goals),True,(255,50,50))
 fps = 60
 wait_schetchik = 3
 aaa = 0
-waiter = font.render(str(wait_schetchik),True,(0,0,0))
+rounds = 1
+round = font.render('Раунд:'+str(rounds),True,(0,0,0))
 clock = time.Clock()
 class Sprites(sprite.Sprite):
     def __init__(self,speed,sprite,player_x,player_y):
@@ -69,18 +69,23 @@ while game:
     for i in event.get():
         if i.type == QUIT:
             game = False
+    if red_goals == 10:
+        win = font.render('win red',True,(255,0,0))
+        window.blit(win,(290,250)) 
+        wait = False
+    if blue_goals == 10:
+        win = font.render('win blue',True,(0,0,255))
+        window.blit(win,(290,250)) 
+        wait = False
     if wait:
         aaa += 1
-        if aaa >= fps:
+        if aaa >= 3*fps:
             aaa = 0
-            wait_schetchik -= 1
-            waiter = font.render(str(wait_schetchik),True,(0,0,0))
-            if wait_schetchik == 0:
-                wait_schetchik = 3
-                wait = False
-                end = True
-        window.blit(circle,(320,260))
-        window.blit(waiter,(380,300))  
+            round = font.render('Раунд:'+str(rounds),True,(0,0,0))
+            wait_schetchik = 3
+            wait = False
+            end = True
+        window.blit(round,(290,250))   
         window.blit(blue,(650,50))    
         window.blit(red,(150,50)) 
     if end:
@@ -90,6 +95,7 @@ while game:
         player2.move2()
         ball.update()
         if ball.rect.x <= -110:
+            rounds += 1
             blue_goals += 1
             blue = font.render(str(blue_goals),True,(0,50,255))
             ball.rect.x = 400
@@ -98,6 +104,7 @@ while game:
             wait = True
         window.blit(blue,(650,50))    
         if ball.rect.x >= 910:
+            rounds += 1
             red_goals += 1
             red = font.render(str(red_goals),True,(255,50,50))
             ball.rect.x = 400
